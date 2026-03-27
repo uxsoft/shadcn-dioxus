@@ -41,6 +41,7 @@ pub fn Checkbox(
                     stroke_linecap: "round",
                     stroke_linejoin: "round",
                     path {
+                        class: "animate-checkbox-check",
                         d: "M20 6 9 17l-5-5",
                     }
                 }

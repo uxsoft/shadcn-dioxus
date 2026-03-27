@@ -234,6 +234,17 @@
   --tw-exit-translate-y: initial;
 }
 
+@keyframes checkbox-check {
+  from { stroke-dashoffset: 25; }
+  to   { stroke-dashoffset: 0;  }
+}
+
+@utility animate-checkbox-check {
+  stroke-dasharray: 25;
+  stroke-dashoffset: 25;
+  animation: checkbox-check 0.2s ease-out forwards;
+}
+
 @keyframes enter {
   from {
     opacity: var(--tw-enter-opacity, 1);
