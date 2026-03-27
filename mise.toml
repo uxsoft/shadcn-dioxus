@@ -1,0 +1,3 @@
+[tools]
+"cargo:dioxus-cli" = "latest"
+rust = "latest"
