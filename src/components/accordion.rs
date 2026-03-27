@@ -57,13 +57,10 @@ pub fn AccordionTrigger(
     #[props(default)] class: String,
     children: Element,
 ) -> Element {
-    let ctx = use_context::<Signal<AccordionContext>>();
+    let mut ctx = use_context::<Signal<AccordionContext>>();
     let item_ctx = use_context::<Signal<AccordionItemContext>>();
     let item_value = item_ctx.read().value.clone();
     let is_open = ctx.read().open_items.contains(&item_value);
-    let onchange = ctx.read().onchange.clone();
-    let multiple = ctx.read().multiple;
-    let open_items = ctx.read().open_items.clone();
     let item_value_clone = item_value.clone();
 
     let classes = cn(&[
@@ -83,16 +80,19 @@ pub fn AccordionTrigger(
                 class: "{classes}",
                 "aria-expanded": if is_open { "true" } else { "false" },
                 onclick: move |_| {
-                    if let Some(handler) = &onchange {
-                        let mut new_items = open_items.clone();
-                        if is_open {
-                            new_items.retain(|v| v != &item_value_clone);
-                        } else {
-                            if !multiple {
-                                new_items.clear();
-                            }
-                            new_items.push(item_value_clone.clone());
+                    let mut new_items = ctx.read().open_items.clone();
+                    let multiple = ctx.read().multiple;
+                    let onchange = ctx.read().onchange.clone();
+                    if is_open {
+                        new_items.retain(|v| v != &item_value_clone);
+                    } else {
+                        if !multiple {
+                            new_items.clear();
                         }
+                        new_items.push(item_value_clone.clone());
+                    }
+                    ctx.write().open_items = new_items.clone();
+                    if let Some(handler) = onchange {
                         handler.call(new_items);
                     }
                 },
@@ -126,17 +126,17 @@ pub fn AccordionContent(
     let item_value = item_ctx.read().value.clone();
     let is_open = ctx.read().open_items.contains(&item_value);
 
-    if !is_open {
-        return rsx! {};
-    }
+    let grid_rows = if is_open { "grid-rows-[1fr]" } else { "grid-rows-[0fr]" };
 
-    let classes = cn(&["overflow-hidden text-sm", &class]);
     rsx! {
         div {
-            class: "{classes}",
+            class: "grid transition-[grid-template-rows] duration-200 ease-out {grid_rows}",
             div {
-                class: "pt-0 pb-4",
-                {children}
+                class: "min-h-0 overflow-hidden",
+                div {
+                    class: cn(&["pb-4 pt-0 text-sm", &class]),
+                    {children}
+                }
             }
         }
     }
