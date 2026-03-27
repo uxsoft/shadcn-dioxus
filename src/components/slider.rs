@@ -44,7 +44,7 @@ pub fn Slider(
             }
             // Visual track
             div {
-                class: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-muted",
+                class: "relative h-1.5 w-full grow overflow-hidden rounded-full bg-muted pointer-events-none",
                 div {
                     class: "absolute h-full bg-primary",
                     style: "{track_style}",
@@ -52,7 +52,7 @@ pub fn Slider(
             }
             // Visual thumb
             div {
-                class: "absolute block size-4 rounded-full border border-primary bg-white shadow-sm ring-ring/50 transition-[color,box-shadow]",
+                class: "absolute block size-4 rounded-full border border-primary bg-white shadow-sm ring-ring/50 transition-[color,box-shadow] pointer-events-none",
                 style: "left: calc({percentage}% - 0.5rem);",
             }
         }
