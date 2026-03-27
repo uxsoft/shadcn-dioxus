@@ -26,6 +26,8 @@ fn App() -> Element {
     rsx! {
         document::Link { rel: "icon", href: FAVICON }
         document::Stylesheet { href: TAILWIND_CSS }
+        document::Title { "shadcn-dioxus" }
+        
         ThemeProvider {
             Router::<Route> {}
             Toaster {}

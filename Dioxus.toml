@@ -3,7 +3,7 @@
 [web.app]
 
 # HTML title tag content
-title = "d"
+title = "shadncn-dioxus"
 
 # include `assets` in web platform
 [web.resource]

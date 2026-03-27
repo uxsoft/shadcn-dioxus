@@ -724,13 +724,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "d"
-version = "0.1.0"
-dependencies = [
- "dioxus",
-]
-
-[[package]]
 name = "darling"
 version = "0.21.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4398,6 +4391,13 @@ dependencies = [
  "cfg-if",
  "cpufeatures",
  "digest",
+]
+
+[[package]]
+name = "shadcn-dioxus"
+version = "0.1.0"
+dependencies = [
+ "dioxus",
 ]
 
 [[package]]
