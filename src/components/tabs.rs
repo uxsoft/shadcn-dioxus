@@ -70,7 +70,7 @@ pub fn TabsTrigger(
     #[props(default)] class: String,
     children: Element,
 ) -> Element {
-    let ctx = use_context::<Signal<TabsContext>>();
+    let mut ctx = use_context::<Signal<TabsContext>>();
     let ctx_read = ctx.read();
     let is_active = ctx_read.active == value;
     let onchange_handler = ctx_read.onchange.clone();
@@ -99,6 +99,7 @@ pub fn TabsTrigger(
             "aria-selected": if is_active { "true" } else { "false" },
             "data-state": if is_active { "active" } else { "inactive" },
             onclick: move |_| {
+                ctx.write().active = value_clone.clone();
                 if let Some(handler) = &onchange_handler {
                     handler.call(value_clone.clone());
                 }
