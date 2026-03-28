@@ -1,16 +1,6 @@
-[package]
-name = "shadcn-dioxus"
-version = "0.1.0"
-authors = ["Jan Dryk <me@uxsoft.cz>"]
-edition = "2021"
-
-
-[dependencies]
-dioxus = { version = "0.7.1", features = ["router", "fullstack"] }
-
-[features]
-default = ["web"]
-web = ["dioxus/web"]
-desktop = ["dioxus/desktop"]
-mobile = ["dioxus/mobile"]
-server = ["dioxus/server"]
+[workspace]
+members = [
+    "shadcn_dioxus",
+    "shadcn_dioxus_web",
+]
+resolver = "2"

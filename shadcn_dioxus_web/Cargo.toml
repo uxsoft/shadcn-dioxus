@@ -1,0 +1,16 @@
+[package]
+name = "shadcn_dioxus_web"
+version = "0.1.0"
+authors = ["Jan Dryk <me@uxsoft.cz>"]
+edition = "2024"
+
+[dependencies]
+dioxus = { version = "0.7.3", features = ["router", "fullstack"] }
+shadcn_dioxus = { path = "../shadcn_dioxus" }
+
+[features]
+default = ["web"]
+web = ["dioxus/web"]
+desktop = ["dioxus/desktop"]
+mobile = ["dioxus/mobile"]
+server = ["dioxus/server"]

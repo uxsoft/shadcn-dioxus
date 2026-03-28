@@ -19,7 +19,9 @@ pub enum ToggleSize {
 fn variant_class(variant: ToggleVariant) -> &'static str {
     match variant {
         ToggleVariant::Default => "bg-transparent",
-        ToggleVariant::Outline => "border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground",
+        ToggleVariant::Outline => {
+            "border border-input bg-transparent shadow-xs hover:bg-accent hover:text-accent-foreground"
+        }
     }
 }
 
@@ -31,7 +33,7 @@ fn size_class(size: ToggleSize) -> &'static str {
     }
 }
 
-const BASE: &str = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none cursor-pointer hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 active:scale-[0.97] active:brightness-90 aria-pressed:bg-muted";
+const BASE: &str = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none cursor-pointer hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 active:scale-[0.97] active:brightness-90 aria-pressed:bg-muted aria-pressed:brightness-90";
 
 #[component]
 pub fn Toggle(
@@ -52,9 +54,7 @@ pub fn Toggle(
             "aria-pressed": if pressed() { "true" } else { "false" },
             "data-state": if pressed() { "on" } else { "off" },
             onclick: move |_| {
-                dioxus::prelude::info!("Toggle button presesd");
                 if let Some(handler) = onchange {
-                    dioxus::prelude::info!("Toggle button handler called, {}", pressed());
                     handler.call(!pressed());
                 }
             },

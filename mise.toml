@@ -1,3 +1,6 @@
 [tools]
 "cargo:dioxus-cli" = "latest"
 rust = "latest"
+
+[tasks]
+dev = "dx serve --package shadcn_dioxus_web"
