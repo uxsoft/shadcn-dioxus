@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use components::*;
-use views::{Home, Navbar};
+use views::{Home, Navbar, ShowcasePage};
 
 mod components;
 mod views;
@@ -12,6 +12,8 @@ enum Route {
     #[layout(Navbar)]
         #[route("/")]
         Home {},
+        #[route("/showcase/:name")]
+        ShowcasePage { name: String },
 }
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
@@ -27,11 +29,10 @@ fn App() -> Element {
         document::Link { rel: "icon", href: FAVICON }
         document::Stylesheet { href: TAILWIND_CSS }
         document::Title { "shadcn-dioxus" }
-        
+
         ThemeProvider {
             Router::<Route> {}
             Toaster {}
         }
     }
 }
-
