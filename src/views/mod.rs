@@ -1,3 +1,4 @@
+pub mod showcases;
 mod navbar;
 mod home;
 
