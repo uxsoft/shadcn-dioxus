@@ -1,5 +1,5 @@
-use dioxus::prelude::*;
 use super::utils::cn;
+use dioxus::prelude::*;
 
 #[derive(Debug, Clone, Copy, PartialEq, Default)]
 pub enum ToggleVariant {
@@ -31,32 +31,31 @@ fn size_class(size: ToggleSize) -> &'static str {
     }
 }
 
-const BASE: &str = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-[color,box-shadow] outline-none cursor-pointer hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4";
-
-const ACTIVE: &str = "bg-accent text-accent-foreground";
+const BASE: &str = "inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-all outline-none cursor-pointer hover:bg-muted hover:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 active:scale-[0.97] active:brightness-90 aria-pressed:bg-muted";
 
 #[component]
 pub fn Toggle(
-    #[props(default)] pressed: bool,
+    #[props(default)] pressed: ReadSignal<bool>,
     #[props(default)] variant: ToggleVariant,
     #[props(default)] size: ToggleSize,
     #[props(default)] disabled: bool,
     #[props(default)] class: String,
-    onchange: Option<EventHandler<bool>>,
+    #[props(default)] onchange: Option<EventHandler<bool>>,
     children: Element,
 ) -> Element {
-    let state_class = if pressed { ACTIVE } else { "" };
-    let classes = cn(&[BASE, variant_class(variant), size_class(size), state_class, &class]);
+    let classes = cn(&[BASE, variant_class(variant), size_class(size), &class]);
     rsx! {
         button {
             r#type: "button",
             class: "{classes}",
             disabled,
-            "aria-pressed": if pressed { "true" } else { "false" },
-            "data-state": if pressed { "on" } else { "off" },
+            "aria-pressed": if pressed() { "true" } else { "false" },
+            "data-state": if pressed() { "on" } else { "off" },
             onclick: move |_| {
-                if let Some(handler) = &onchange {
-                    handler.call(!pressed);
+                dioxus::prelude::info!("Toggle button presesd");
+                if let Some(handler) = onchange {
+                    dioxus::prelude::info!("Toggle button handler called, {}", pressed());
+                    handler.call(!pressed());
                 }
             },
             {children}
