@@ -1,17 +1,22 @@
-use dioxus::prelude::*;
+use std::ops::Not;
+
 use super::utils::cn;
+use dioxus::prelude::*;
+
+#[derive(Clone)]
+pub struct CollapsibleContext {
+    pub open: ReadSignal<bool>,
+    pub onchange: Option<EventHandler<bool>>,
+}
 
 #[component]
 pub fn Collapsible(
-    #[props(default)] open: bool,
+    #[props(default)] open: ReadSignal<bool>,
     #[props(default)] class: String,
     onchange: Option<EventHandler<bool>>,
     children: Element,
 ) -> Element {
-    use_context_provider(|| Signal::new(CollapsibleContext {
-        open,
-        onchange: onchange.clone(),
-    }));
+    use_context_provider(|| Signal::new(CollapsibleContext { open, onchange }));
 
     let classes = cn(&["", &class]);
     rsx! {
@@ -22,27 +27,16 @@ pub fn Collapsible(
     }
 }
 
-#[derive(Clone)]
-pub struct CollapsibleContext {
-    pub open: bool,
-    pub onchange: Option<EventHandler<bool>>,
-}
-
 #[component]
-pub fn CollapsibleTrigger(
-    #[props(default)] class: String,
-    children: Element,
-) -> Element {
+pub fn CollapsibleTrigger(#[props(default)] class: String, children: Element) -> Element {
     let ctx = use_context::<Signal<CollapsibleContext>>();
-    let is_open = ctx.read().open;
-    let onchange = ctx.read().onchange.clone();
 
     rsx! {
         div {
             class: "{class}",
             onclick: move |_| {
-                if let Some(handler) = &onchange {
-                    handler.call(!is_open);
+                if let Some(handler) = ctx().onchange {
+                    handler.call(ctx().open.read().not());
                 }
             },
             {children}
@@ -51,14 +45,10 @@ pub fn CollapsibleTrigger(
 }
 
 #[component]
-pub fn CollapsibleContent(
-    #[props(default)] class: String,
-    children: Element,
-) -> Element {
+pub fn CollapsibleContent(#[props(default)] class: String, children: Element) -> Element {
     let ctx = use_context::<Signal<CollapsibleContext>>();
-    let is_open = ctx.read().open;
 
-    if !is_open {
+    if ctx().open.read().not() {
         return rsx! {};
     }
 

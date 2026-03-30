@@ -1,22 +1,26 @@
-use dioxus::prelude::*;
+use std::ops::Not;
+
 use super::utils::cn;
+use dioxus::prelude::*;
 
 #[derive(Clone)]
 pub struct DropdownMenuContext {
-    pub open: bool,
+    pub open: ReadSignal<bool>,
     pub onclose: Option<EventHandler<()>>,
 }
 
 #[component]
 pub fn DropdownMenu(
-    #[props(default)] open: bool,
+    #[props(default)] open: ReadSignal<bool>,
     onclose: Option<EventHandler<()>>,
     children: Element,
 ) -> Element {
-    use_context_provider(|| Signal::new(DropdownMenuContext {
-        open,
-        onclose: onclose.clone(),
-    }));
+    use_context_provider(|| {
+        Signal::new(DropdownMenuContext {
+            open,
+            onclose: onclose.clone(),
+        })
+    });
 
     rsx! {
         div {
@@ -27,10 +31,7 @@ pub fn DropdownMenu(
 }
 
 #[component]
-pub fn DropdownMenuTrigger(
-    #[props(default)] class: String,
-    children: Element,
-) -> Element {
+pub fn DropdownMenuTrigger(#[props(default)] class: String, children: Element) -> Element {
     rsx! {
         div {
             class: "{class}",
@@ -46,10 +47,6 @@ pub fn DropdownMenuContent(
     children: Element,
 ) -> Element {
     let ctx = use_context::<Signal<DropdownMenuContext>>();
-    if !ctx.read().open {
-        return rsx! {};
-    }
-    let onclose = ctx.read().onclose.clone();
 
     let align_class = match align.as_str() {
         "start" | "left" => "left-0",
@@ -65,12 +62,15 @@ pub fn DropdownMenuContent(
         &class,
     ]);
 
+    if ctx().open.read().not() {
+        return rsx! {};
+    }
     rsx! {
         // Invisible overlay to catch outside clicks
         div {
             class: "fixed inset-0 z-40",
             onclick: move |_| {
-                if let Some(handler) = &onclose {
+                if let Some(handler) = ctx.read().onclose {
                     handler.call(());
                 }
             },
@@ -87,7 +87,7 @@ pub fn DropdownMenuContent(
 #[component]
 pub fn DropdownMenuItem(
     #[props(default)] class: String,
-    #[props(default)] disabled: bool,
+    #[props(default = false)] disabled: bool,
     #[props(default)] destructive: bool,
     onclick: Option<EventHandler<MouseEvent>>,
     children: Element,
@@ -110,7 +110,7 @@ pub fn DropdownMenuItem(
         div {
             class: "{classes}",
             role: "menuitem",
-            "data-disabled": if disabled { "true" } else { "" },
+            "data-disabled": if disabled { Some("true") } else { None },
             onclick: move |evt| {
                 if !disabled {
                     if let Some(handler) = &onclick {
@@ -124,9 +124,7 @@ pub fn DropdownMenuItem(
 }
 
 #[component]
-pub fn DropdownMenuSeparator(
-    #[props(default)] class: String,
-) -> Element {
+pub fn DropdownMenuSeparator(#[props(default)] class: String) -> Element {
     let classes = cn(&["-mx-1 my-1 h-px bg-border", &class]);
     rsx! {
         div {
@@ -137,10 +135,7 @@ pub fn DropdownMenuSeparator(
 }
 
 #[component]
-pub fn DropdownMenuLabel(
-    #[props(default)] class: String,
-    children: Element,
-) -> Element {
+pub fn DropdownMenuLabel(#[props(default)] class: String, children: Element) -> Element {
     let classes = cn(&["px-2 py-1.5 text-sm font-semibold", &class]);
     rsx! {
         div {
@@ -151,11 +146,11 @@ pub fn DropdownMenuLabel(
 }
 
 #[component]
-pub fn DropdownMenuShortcut(
-    #[props(default)] class: String,
-    children: Element,
-) -> Element {
-    let classes = cn(&["ml-auto text-xs tracking-widest text-muted-foreground", &class]);
+pub fn DropdownMenuShortcut(#[props(default)] class: String, children: Element) -> Element {
+    let classes = cn(&[
+        "ml-auto text-xs tracking-widest text-muted-foreground",
+        &class,
+    ]);
     rsx! {
         span {
             class: "{classes}",
@@ -165,9 +160,7 @@ pub fn DropdownMenuShortcut(
 }
 
 #[component]
-pub fn DropdownMenuGroup(
-    children: Element,
-) -> Element {
+pub fn DropdownMenuGroup(children: Element) -> Element {
     rsx! {
         div {
             role: "group",

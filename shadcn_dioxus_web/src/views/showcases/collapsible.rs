@@ -1,6 +1,6 @@
-use dioxus::prelude::*;
-use crate::components::*;
 use super::section_title::SectionTitle;
+use crate::components::*;
+use dioxus::prelude::*;
 
 #[component]
 pub fn CollapsibleShowcase() -> Element {

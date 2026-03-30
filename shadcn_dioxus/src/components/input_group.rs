@@ -1,11 +1,8 @@
-use dioxus::prelude::*;
 use super::utils::cn;
+use dioxus::prelude::*;
 
 #[component]
-pub fn InputGroup(
-    #[props(default)] class: String,
-    children: Element,
-) -> Element {
+pub fn InputGroup(#[props(default)] class: String, children: Element) -> Element {
     let classes = cn(&[
         "flex items-center rounded-md border border-input shadow-xs focus-within:border-ring focus-within:ring-[3px] focus-within:ring-ring/50",
         "has-[input:disabled]:opacity-50 has-[input:disabled]:cursor-not-allowed",
@@ -20,10 +17,7 @@ pub fn InputGroup(
 }
 
 #[component]
-pub fn InputGroupAddon(
-    #[props(default)] class: String,
-    children: Element,
-) -> Element {
+pub fn InputGroupAddon(#[props(default)] class: String, children: Element) -> Element {
     let classes = cn(&[
         "flex items-center px-3 text-sm text-muted-foreground bg-muted border-r border-input first:rounded-l-md last:rounded-r-md last:border-r-0 last:border-l",
         "h-full",
