@@ -18,7 +18,7 @@ RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/ca
 # `--locked` keeps the build-from-source fallback reproducible when binstall can't
 # fetch a prebuilt binary; without it the CLI resolves newer semver-compatible deps
 # and fails to compile.
-RUN cargo binstall dioxus-cli@0.7.3 --locked --root /.cargo -y --force
+RUN cargo binstall dioxus-cli@0.7.10 --locked --root /.cargo -y --force
 # RUN curl -fsSL https://dioxus.dev/install.sh | bash
 
 # Create the final bundle folder. Bundle always executes in release mode with optimizations enabled
@@ -38,4 +38,4 @@ ENV IP=0.0.0.0
 EXPOSE 8080
 
 WORKDIR /usr/local/app
-ENTRYPOINT [ "/usr/local/app/shadcn_dioxus_web" ]
+ENTRYPOINT [ "/usr/local/app/server" ]
